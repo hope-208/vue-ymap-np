@@ -12,6 +12,7 @@ app.use(ElementPlus)
 app.use(
   createYmaps({
     apikey: 'f5d0afd4-53ae-4593-83c8-9a1ec3485f59',
+    // apikey: 'f5d0afd4-53ae-4593-83c8-9a1ec3485f59',
     lang: 'ru_RU',
   }),
 )

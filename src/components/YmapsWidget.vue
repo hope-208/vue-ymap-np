@@ -9,7 +9,7 @@
       showScaleInCopyrights: true,
     }"
     width="100%"
-    :height="isFullscreen ? '100dvh' : '500px'"
+    height="100vh"
   >
     <YandexMapDefaultSchemeLayer />
     <YandexMapDefaultFeaturesLayer />
@@ -99,6 +99,7 @@
           <div class="marker-popup">
             <h3>{{ marker.np_name }}</h3>
             <p>{{ marker.name }}</p>
+            <p>Год(ы): {{ formatYearRange(marker.year) }}</p>
           </div>
         </template>
       </el-popover>
@@ -109,7 +110,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect, nextTick, watch } from 'vue'
 import type {
-  //LngLat,
   YMap,
   //YMapFeatureProps
 } from '@yandex/ymaps3-types'
@@ -146,28 +146,28 @@ const location: YMapLocationRequest = {
 /*const ulyanovskPolygon: LngLat[] = [
   [45.797506, 52.548958],
   [50.243484, 54.891416],
-];
+]*/
 
 // Полигон для затемнения всего кроме Ульяновской области
-const fullMapPolygon: LngLat[] = [
+/*const fullMapPolygon: LngLat[] = [
   [-180, -90],
   [180, -90],
   [180, 90],
   [-180, 90],
   [-180, -90],
-];
-
+]*/
+/**/
 // Стили для полигонов
-const features: YMapFeatureProps[] = [
+/*const features: YMapFeatureProps[] = [
   {
     geometry: {
-      type: "Polygon",
+      type: 'Polygon',
       coordinates: [ulyanovskPolygon],
     },
     style: {
       stroke: [
         {
-          color: "#8265CB",
+          color: '#8265CB',
           width: 2,
         },
       ],
@@ -176,7 +176,7 @@ const features: YMapFeatureProps[] = [
   },
   {
     geometry: {
-      type: "Polygon",
+      type: 'Polygon',
       coordinates: [
         fullMapPolygon,
         ulyanovskPolygon, // "дыра", исключает Ульяновскую область
@@ -185,15 +185,14 @@ const features: YMapFeatureProps[] = [
     style: {
       stroke: [
         {
-          color: "#8265CB",
+          color: '#8265CB',
           width: 2,
         },
       ],
-      fill: "rgba(0, 0, 0, 0.2)", // Затемнение
+      fill: 'rgba(0, 0, 0, 0.2)', // Затемнение
     },
   },
-];
-*/
+]*/
 
 // Обработка маркеров
 const markers = ref<Marker[]>([
@@ -202,9 +201,17 @@ const markers = ref<Marker[]>([
 const filteredMarkers = ref<Marker[]>([])
 
 const uniqueYears = computed(() => {
-  return [...new Set(markers.value.map((m) => m.year))]
-    .filter((a): a is number => a !== null)
-    .sort((a, b) => a - b)
+  const allYears: number[] = []
+  markers.value.forEach((marker) => {
+    if (marker.year !== null) {
+      if (Array.isArray(marker.year)) {
+        allYears.push(...marker.year)
+      } else {
+        allYears.push(marker.year)
+      }
+    }
+  })
+  return [...new Set(allYears)].sort((a, b) => a - b)
 })
 const uniqueNpNames = computed(() => {
   return [...new Set(markers.value.map((m) => m.np_name))]
@@ -239,7 +246,11 @@ const handleCheckAllNp = (val: boolean) => {
 const applyFilters = () => {
   filteredMarkers.value = markers.value
     .filter((marker) => {
-      const yearMatch = selectedYear.value === null || marker.year === selectedYear.value
+      const yearMatch =
+        selectedYear.value === null ||
+        (Array.isArray(marker.year)
+          ? marker.year.includes(selectedYear.value)
+          : marker.year === selectedYear.value)
       const statusMatch = selectedStatus.value === null || marker.is_ready === selectedStatus.value
       const npMatch =
         selectedNpName.value.includes('all') || selectedNpName.value.includes(marker.np_name!)
@@ -249,15 +260,14 @@ const applyFilters = () => {
     .sort((a, b) => {
       const aName = a.np_name ?? ''
       const bName = b.np_name ?? ''
-      const aYear = a.year ?? ''
-      const bYear = b.year ?? ''
+      const aYear = Array.isArray(a.year) ? a.year[0] : (a.year ?? 0)
+      const bYear = Array.isArray(b.year) ? b.year[0] : (b.year ?? 0)
 
       if (aName < bName) return -1
       if (aName > bName) return 1
 
-      if (aYear < bYear) return -1
-      if (aYear > bYear) return 1
-
+      if (aYear && bYear && aYear < bYear) return -1
+      if (aYear && bYear && aYear > bYear) return 1
       return 0
     })
 }
@@ -281,15 +291,28 @@ selectedNpName.value = ['all']
 selectedYear.value = null
 selectedStatus.value = null
 
+// Форматирование года или диапазона лет
+const formatYearRange = (year: number | number[] | null): string => {
+  if (year === null) return 'Не указан'
+  if (Array.isArray(year)) {
+    if (year.length === 0) return 'Не указан'
+    if (year.length === 1) return year[0]?.toString() || 'Не указан'
+    const sortedYears = [...year].sort((a, b) => a - b)
+    return `${sortedYears[0]}-${sortedYears[sortedYears.length - 1]}`
+  }
+  return year.toString()
+}
+
 // Генерация SVG для маркера
 const generateMarkerSvg = (marker: Marker): string => {
-  const color = marker.is_ready ? marker.iconColor : '#fff'
+  const colorFill = marker.is_ready ? marker.iconColor : '#fff'
+  const color = marker.iconColor
   const strokeColor = marker.is_ready ? 'none' : marker.iconColor
   const strokeWidth = '1'
   if (marker.is_ready) {
     return `
     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="41" viewBox="0 0 33 26"
-    fill="${color}"
+    fill="${colorFill}"
     stroke="${strokeColor}" stroke-width="${strokeWidth}">
       <g>
         <path d="M11.9107 3.29968L4.28382 19.7018C4.20024 19.8696 4.36741 20.0584 4.55547 19.9954L28.46 11.27C28.5436 11.249 28.6063 11.1651 28.6063 11.0812V3.38357C28.6063 3.25773 28.5018 3.17383 28.3973 3.17383H12.0988C12.0152 3.17383 11.9525 3.21578 11.9107 3.29968Z"
@@ -381,8 +404,8 @@ onMounted(async () => {
   document.addEventListener('fullscreenchange', handleFullscreenChange)
 
   nextTick(() => {
-    if (uniqueNpNames.value.length > 0) {
-      selectedNpName.value = uniqueNpNames.value[0] // первое значение по умолчанию
+    if (uniqueNpNames.value.length > 0 && uniqueNpNames.value[0]) {
+      selectedNpName.value = [uniqueNpNames.value[0]] // первое значение по умолчанию
     }
     applyFilters()
   })
