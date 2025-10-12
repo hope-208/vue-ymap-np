@@ -465,7 +465,7 @@ const generateMarkerSvg = (marker: Marker): string => {
     fill="${color}"
     stroke="${strokeColor}" stroke-width="${strokeWidth}">
       <defs>
-        <pattern id="diagonalHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+        <pattern id="diagonalHatch${strokeColor}" patternUnits="userSpaceOnUse" width="4" height="4">
           <path d="M-1,1 l2,-2
                   M0,4 l4,-4
                   M3,5 l2,-2"
@@ -474,7 +474,7 @@ const generateMarkerSvg = (marker: Marker): string => {
       </defs>
       <g>
         <path d="M11.9107 3.29968L4.28382 19.7018C4.20024 19.8696 4.36741 20.0584 4.55547 19.9954L28.46 11.27C28.5436 11.249 28.6063 11.1651 28.6063 11.0812V3.38357C28.6063 3.25773 28.5018 3.17383 28.3973 3.17383H12.0988C12.0152 3.17383 11.9525 3.21578 11.9107 3.29968Z"
-        fill="url(#diagonalHatch)" />
+        fill="url(#diagonalHatch${strokeColor})" />
       </g>
     </svg>
   `
