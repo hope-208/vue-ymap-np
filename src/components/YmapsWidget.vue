@@ -30,7 +30,7 @@
     </YandexMapControls>
 
     <YandexMapControls :settings="{ position: 'top left' }">
-      <YandexMapControlButton :settings="{ onClick: applyFilters }">
+      <YandexMapControlButton :settings="{ onClick: applyFilters }" class="filter-container">
         <!--:settings="{ onClick: toggleFullscreen }"-->
         <el-row style="width: fit-content">
           <el-select
@@ -41,6 +41,7 @@
             collapse-tags
             placeholder="Национальный проект"
             label="Национальный проект"
+            clearable
             @change="applyFilters"
           >
             <template #header>
@@ -55,20 +56,56 @@
             <el-option v-for="np in uniqueNpNames" :key="np" :label="np" :value="np" />
           </el-select>
 
-          <div style="display: flex; flex-direction: row; gap: 10px; flex: 50%">
-            <el-select class="filter years" v-model="selectedYear" placeholder="Год" filterable>
-              <el-option label="Все" value="null" />
-              <el-option v-for="year in uniqueYears" :key="year" :label="year" :value="year" />
+          <div style="display: flex; flex-direction: row; gap: 10px; flex: 50%; margin-top: 8px">
+            <el-select
+              class="filter years"
+              v-model="selectedYear"
+              placeholder="Год"
+              filterable
+              clearable
+              multiple
+              collapse-tags
+              @change="applyFilters"
+            >
+              <template #header>
+                <el-checkbox
+                  v-model="checkAllYear"
+                  :indeterminate="indeterminateYear"
+                  @change="handleCheckAllYear"
+                >
+                  Все
+                </el-checkbox>
+              </template>
+              <el-option
+                v-for="year in uniqueYearsFiltered"
+                :key="year"
+                :label="year"
+                :value="year"
+              />
             </el-select>
             <el-select
               class="filter"
               v-model="selectedStatus"
               placeholder="Готовность"
+              clearable
+              multiple
               @change="applyFilters"
             >
-              <el-option label="Все" value="null" />
-              <el-option label="План" value="false" />
-              <el-option label="Факт" value="true" />
+              <template #header>
+                <el-checkbox
+                  v-model="checkAllStatus"
+                  :indeterminate="indeterminateStatus"
+                  @change="handleCheckAllStatus"
+                >
+                  Все
+                </el-checkbox>
+              </template>
+              <el-option
+                v-for="status in uniqueStatusesFiltered"
+                :key="status.value"
+                :label="status.label"
+                :value="status.value"
+              />
             </el-select>
           </div>
         </el-row>
@@ -91,15 +128,16 @@
         zIndex: openMarker === index ? 1 : 0,
       }"
     >
-      <el-popover placement="top" :width="400" trigger="click">
+      <el-popover placement="top" :width="400" trigger="click" :title="marker.np_name">
         <template #reference>
           <div class="pin" v-html="generateMarkerSvg(marker)"></div>
         </template>
         <template #default>
           <div class="marker-popup">
-            <h3>{{ marker.np_name }}</h3>
+            <!-- <h3>{{ marker.np_name }}</h3>
+              <p>Год(ы): {{ formatYearRange(marker.year) }}</p>
+              -->
             <p>{{ marker.name }}</p>
-            <p>Год(ы): {{ formatYearRange(marker.year) }}</p>
           </div>
         </template>
       </el-popover>
@@ -131,9 +169,9 @@ const map = ref<YMap>()
 const openMarker = ref<number | null>(null)
 
 // Реактивные фильтры
-const selectedYear = ref<number | null>(null)
-const selectedNpName = ref<string[]>(['all'])
-const selectedStatus = ref<boolean | null>(null)
+const selectedYear = ref<number[]>([])
+const selectedNpName = ref<string[]>([])
+const selectedStatus = ref<boolean[]>([])
 
 // Начальное положение карты
 /*
@@ -213,14 +251,61 @@ const uniqueYears = computed(() => {
   })
   return [...new Set(allYears)].sort((a, b) => a - b)
 })
+
+// Отфильтрованные года в зависимости от выбранных нацпроектов
+const uniqueYearsFiltered = computed(() => {
+  // Если не выбран ни один национальный проект, показываем все года
+  if (selectedNpName.value.length === 0) {
+    return uniqueYears.value
+  }
+
+  const allYears: number[] = []
+  markers.value.forEach((marker) => {
+    if (marker.np_name && selectedNpName.value.includes(marker.np_name) && marker.year !== null) {
+      if (Array.isArray(marker.year)) {
+        allYears.push(...marker.year)
+      } else {
+        allYears.push(marker.year)
+      }
+    }
+  })
+  return [...new Set(allYears)].sort((a, b) => a - b)
+})
+
 const uniqueNpNames = computed(() => {
   return [...new Set(markers.value.map((m) => m.np_name))]
-    .filter((a): a is string => a !== null && a !== undefined)
+    .filter((a): a is string => a !== null && a !== undefined && a !== '-')
     .sort()
 })
 
+// Отфильтрованные статусы в зависимости от выбранных нацпроектов
+const uniqueStatusesFiltered = computed(() => {
+  if (selectedNpName.value.length === 0) {
+    return [
+      { label: 'План', value: false },
+      { label: 'Факт', value: true },
+    ]
+  }
+
+  const statuses = new Set<boolean>()
+  markers.value.forEach((marker) => {
+    if (marker.np_name && selectedNpName.value.includes(marker.np_name)) {
+      statuses.add(marker.is_ready)
+    }
+  })
+
+  const result: { label: string; value: boolean }[] = []
+  if (statuses.has(false)) result.push({ label: 'План', value: false })
+  if (statuses.has(true)) result.push({ label: 'Факт', value: true })
+  return result
+})
+
 const checkAllNp = ref(false)
+const checkAllYear = ref(false)
+const checkAllStatus = ref(false)
 const indeterminateNp = ref(false)
+const indeterminateYear = ref(false)
+const indeterminateStatus = ref(false)
 
 watch(selectedNpName, (val) => {
   if (val.length === 0) {
@@ -232,6 +317,45 @@ watch(selectedNpName, (val) => {
   } else {
     indeterminateNp.value = true
   }
+
+  // Очищаем выбранные года, которые больше не актуальны
+  const availableYears = uniqueYearsFiltered.value
+  selectedYear.value = selectedYear.value.filter((year) => availableYears.includes(year))
+
+  // Обновляем состояние "выбрать все" для годов
+  if (selectedYear.value.length === 0) {
+    checkAllYear.value = false
+    indeterminateYear.value = false
+  } else if (selectedYear.value.length === availableYears.length) {
+    checkAllYear.value = true
+    indeterminateYear.value = false
+  } else {
+    indeterminateYear.value = true
+  }
+})
+
+watch(selectedYear, (val) => {
+  if (val.length === 0) {
+    checkAllYear.value = false
+    indeterminateYear.value = false
+  } else if (val.length === uniqueYearsFiltered.value.length) {
+    checkAllYear.value = true
+    indeterminateYear.value = false
+  } else {
+    indeterminateYear.value = true
+  }
+})
+
+watch(selectedStatus, (val) => {
+  if (val.length === 0) {
+    checkAllStatus.value = false
+    indeterminateStatus.value = false
+  } else if (val.length === uniqueStatusesFiltered.value.length) {
+    checkAllStatus.value = true
+    indeterminateStatus.value = false
+  } else {
+    indeterminateStatus.value = true
+  }
 })
 
 const handleCheckAllNp = (val: boolean) => {
@@ -239,21 +363,53 @@ const handleCheckAllNp = (val: boolean) => {
   if (val) {
     selectedNpName.value = [...uniqueNpNames.value]
   } else {
-    selectedNpName.value = ['all']
+    selectedNpName.value = []
+  }
+}
+const handleCheckAllYear = (val: boolean) => {
+  indeterminateYear.value = false
+  if (val) {
+    selectedYear.value = [...uniqueYearsFiltered.value]
+  } else {
+    selectedYear.value = []
+  }
+}
+
+// const handleCheckAllYear = (val: boolean) => {
+//   indeterminateYear.value = false
+//   if (val) {
+//     selectedYear.value = null // Выбраны все года
+//   } else {
+//     selectedYear.value = null // Снято выделение - тоже все года
+//   }
+// }
+
+const handleCheckAllStatus = (val: boolean) => {
+  indeterminateStatus.value = false
+  if (val) {
+    selectedStatus.value = uniqueStatusesFiltered.value.map((status) => status.value)
+  } else {
+    selectedStatus.value = []
   }
 }
 // Применение фильтров
 const applyFilters = () => {
   filteredMarkers.value = markers.value
     .filter((marker) => {
+      // Фильтр по году
       const yearMatch =
-        selectedYear.value === null ||
+        selectedYear.value.length === 0 ||
         (Array.isArray(marker.year)
-          ? marker.year.includes(selectedYear.value)
-          : marker.year === selectedYear.value)
-      const statusMatch = selectedStatus.value === null || marker.is_ready === selectedStatus.value
+          ? marker.year.some((year) => selectedYear.value.includes(year))
+          : selectedYear.value.includes(marker.year ?? 0))
+
+      // Фильтр по статусу
+      const statusMatch =
+        selectedStatus.value.length === 0 || selectedStatus.value.includes(marker.is_ready)
+
+      // Фильтр по национальному проекту
       const npMatch =
-        selectedNpName.value.includes('all') || selectedNpName.value.includes(marker.np_name!)
+        selectedNpName.value.length === 0 || selectedNpName.value.includes(marker.np_name!)
 
       return yearMatch && statusMatch && npMatch
     })
@@ -284,23 +440,6 @@ const toggleFullscreen = () => {
 // Открытие/закрытие попапа
 const togglePopup = (index: number) => {
   openMarker.value = openMarker.value === index ? null : index
-}
-
-// Инициализация фильтров
-selectedNpName.value = ['all']
-selectedYear.value = null
-selectedStatus.value = null
-
-// Форматирование года или диапазона лет
-const formatYearRange = (year: number | number[] | null): string => {
-  if (year === null) return 'Не указан'
-  if (Array.isArray(year)) {
-    if (year.length === 0) return 'Не указан'
-    if (year.length === 1) return year[0]?.toString() || 'Не указан'
-    const sortedYears = [...year].sort((a, b) => a - b)
-    return `${sortedYears[0]}-${sortedYears[sortedYears.length - 1]}`
-  }
-  return year.toString()
 }
 
 // Генерация SVG для маркера
@@ -404,9 +543,8 @@ onMounted(async () => {
   document.addEventListener('fullscreenchange', handleFullscreenChange)
 
   nextTick(() => {
-    if (uniqueNpNames.value.length > 0 && uniqueNpNames.value[0]) {
-      selectedNpName.value = [uniqueNpNames.value[0]] // первое значение по умолчанию
-    }
+    // Установка значений по умолчанию для фильтров
+    // По умолчанию выбираем все значения, поэтому оставляем пустой массив
     applyFilters()
   })
 })
@@ -416,9 +554,13 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style scoped>
+<style>
+.filter-container {
+  max-width: 494px;
+  width: fit-content;
+}
 .years {
-  max-width: 80px;
+  max-width: 160px;
   width: 100%;
 }
 .read-the-docs {
