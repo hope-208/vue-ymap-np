@@ -6,8 +6,13 @@
         center: [48.401219, 54.332098], // [lng, lat] - Ульяновск
         zoom: 8,
       },
+      zoomRange: {
+        min: 4,
+        max: 19,
+      },
       showScaleInCopyrights: true,
     }"
+    @update:zoom="handleZoomChange($event)"
     width="100%"
     height="100vh"
   >
@@ -118,30 +123,48 @@
       </YandexMapControlButton>
     </YandexMapControls>
 
-    <!-- Маркеры -->
-    <YandexMapMarker
-      v-for="(marker, index) in filteredMarkers"
-      :key="index"
-      :settings="{
-        coordinates: marker.coordinates || [48.401219, 54.332098],
-        onClick: () => togglePopup(index),
-        zIndex: openMarker === index ? 1 : 0,
-      }"
-    >
-      <el-popover placement="top" :width="400" trigger="click" :title="marker.np_name">
-        <template #reference>
-          <div class="pin" v-html="generateMarkerSvg(marker)"></div>
+    <!-- Кластеризаторы маркеров по национальным проектам -->
+    <template v-for="(markersGroup, npName) in groupedMarkers" :key="npName">
+      <YandexMapClusterer
+        v-if="shouldShowClusters"
+        :grid-size="64"
+        :zoom-on-cluster-click="true"
+        :cluster-screen-distance="30"
+        @trueBounds="trueBounds = $event"
+      >
+        <YandexMapMarker
+          v-for="(marker, index) in markersGroup"
+          :key="`${npName}-${index}`"
+          :settings="{
+            coordinates: marker.coordinates || [48.401219, 54.332098],
+            onClick: () => togglePopup(markers.indexOf(marker)),
+            zIndex: openMarker === markers.indexOf(marker) ? 1 : 0,
+          }"
+        >
+          <el-popover placement="top" :width="400" trigger="click" :title="marker.np_name">
+            <template #reference>
+              <div class="pin" v-html="generateMarkerSvg(marker)"></div>
+            </template>
+            <template #default>
+              <div class="marker-popup">
+                <!-- <h3>{{ marker.np_name }}</h3>
+                  <p>Год(ы): {{ formatYearRange(marker.year) }}</p>
+                  -->
+                <p>{{ marker.name }}</p>
+              </div>
+            </template>
+          </el-popover>
+        </YandexMapMarker>
+
+        <!-- Кастомный слот для кластеров -->
+        <template #cluster="{ length }">
+          <div
+            class="cluster-marker"
+            v-html="generateClusterSvg(length, markersGroup[0]?.iconColor || '#888888')"
+          ></div>
         </template>
-        <template #default>
-          <div class="marker-popup">
-            <!-- <h3>{{ marker.np_name }}</h3>
-              <p>Год(ы): {{ formatYearRange(marker.year) }}</p>
-              -->
-            <p>{{ marker.name }}</p>
-          </div>
-        </template>
-      </el-popover>
-    </YandexMapMarker>
+      </YandexMapClusterer>
+    </template>
   </YandexMap>
 </template>
 
@@ -149,11 +172,13 @@
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect, nextTick, watch } from 'vue'
 import type {
   YMap,
+  LngLatBounds,
   //YMapFeatureProps
 } from '@yandex/ymaps3-types'
 import { type Marker, markerList } from '../assets/data'
 import {
   YandexMap,
+  YandexMapClusterer,
   YandexMapControlButton,
   YandexMapControls,
   YandexMapDefaultFeaturesLayer,
@@ -166,7 +191,12 @@ import {
 
 const isFullscreen = ref(false)
 const map = ref<YMap>()
+const currentZoom = ref(8)
 const openMarker = ref<number | null>(null)
+const trueBounds = ref<LngLatBounds>([
+  [0, 0],
+  [0, 0],
+])
 
 // Реактивные фильтры
 const selectedYear = ref<number[]>([])
@@ -428,6 +458,32 @@ const applyFilters = () => {
     })
 }
 
+// Группировка маркеров по национальным проектам
+const groupedMarkers = computed(() => {
+  const groups: Record<string, Marker[]> = {}
+
+  filteredMarkers.value.forEach((marker) => {
+    const npName = marker.np_name || 'Без национального проекта'
+    if (!groups[npName]) {
+      groups[npName] = []
+    }
+    groups[npName].push(marker)
+  })
+
+  return groups
+})
+
+// Определяем, должны ли отображаться кластеры
+const shouldShowClusters = computed(() => {
+  // Всегда показываем кластеры, если зум меньше 17
+  return currentZoom.value < 17
+})
+
+// Обработчик изменения зума
+const handleZoomChange = (zoom: number) => {
+  currentZoom.value = zoom
+}
+
 // Переключение fullscreen
 const toggleFullscreen = () => {
   if (isFullscreen.value) {
@@ -479,6 +535,26 @@ const generateMarkerSvg = (marker: Marker): string => {
     </svg>
   `
   }
+}
+
+// Генерация SVG для кластера
+const generateClusterSvg = (count: number, color: string = '#888888'): string => {
+  const strokeWidth = '1'
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="41" viewBox="0 0 33 26"
+    fill="${color}"
+    stroke="${color}" stroke-width="${strokeWidth}">
+      <g>
+        <path d="M11.9107 3.29968L4.28382 19.7018C4.20024 19.8696 4.36741 20.0584 4.55547 19.9954L28.46 11.27C28.5436 11.249 28.6063 11.1651 28.6063 11.0812V3.38357C28.6063 3.25773 28.5018 3.17383 28.3973 3.17383H12.0988C12.0152 3.17383 11.9525 3.21578 11.9107 3.29968Z"
+        fill="${color}" />
+      </g>
+
+    </svg>
+    <div class="cluster-count">${count}</div>
+  `
+  // <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="10" font-family="Arial, sans-serif" font-weight="bold">
+  //       ${count}
+  //     </text>
 }
 
 // Геодекодирование и фильтрация маркеров вне Ульяновской области
@@ -575,5 +651,29 @@ onBeforeUnmount(() => {
 
 .exit-fullscreen {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cg fill='%236B6B6B'%3E%3Cpath d='M8.14 15.86L6.27 14H12v5.7l-1.83-1.83-3.13 3.14L5 18.98l3.13-3.13zm0 0M17.86 10.14L19.73 12H14V6.3l1.83 1.83 3.13-3.14L21 7.02l-3.13 3.13zm0 0'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.cluster-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.cluster-count {
+  position: absolute;
+  top: 37%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  pointer-events: none; /* Чтобы клик проходил через текст на SVG */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Контур для лучшей читаемости */
+  min-width: 20px;
+  text-align: center;
+  padding: 2px;
 }
 </style>
