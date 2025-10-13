@@ -599,7 +599,14 @@ const generateClusterSvg = (count: number, color: string = '#888888'): string =>
 // Геодекодирование и фильтрация маркеров вне Ульяновской области
 const successfulMarkers = ref<Marker[]>([])
 const failedMarkers = ref<Marker[]>([])
-const apiKey = 'f31c485f-6573-485a-bcb8-fade4c9ba787'
+
+// Функция для получения API-ключа из переменных окружения
+const getApiKey = (): string => {
+  // @ts-expect-error: игнорируем ошибки типов для import.meta.env
+  return import.meta.env?.VITE_YANDEX_API_KEY
+}
+
+const apiKey = getApiKey()
 
 const isWithinUlyanovskRegion = (lat: number, lon: number): boolean => {
   const minLat = 54.0431

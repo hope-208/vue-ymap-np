@@ -7,6 +7,7 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vite.dev/config/
 export default defineConfig({
+  //base: process.env.NODE_ENV === 'production' ? '/vue-ymap-np/' : '/',
   plugins: [vue(), vueDevTools(), mkcert()],
   resolve: {
     https: true,

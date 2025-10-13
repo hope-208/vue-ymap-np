@@ -11,8 +11,7 @@ const app = createApp(App)
 app.use(ElementPlus)
 app.use(
   createYmaps({
-    apikey: 'f5d0afd4-53ae-4593-83c8-9a1ec3485f59',
-    // apikey: 'f5d0afd4-53ae-4593-83c8-9a1ec3485f59',
+    apikey: import.meta.env.VITE_YANDEX_API_KEY,
     lang: 'ru_RU',
   }),
 )
