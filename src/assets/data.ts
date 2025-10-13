@@ -3227,7 +3227,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [49.768077, 54.158446],
+    coordinates: [49.767957, 54.15875],
   },
   {
     idx: 291,

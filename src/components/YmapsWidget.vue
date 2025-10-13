@@ -125,6 +125,7 @@
 
     <!-- Кластеризаторы маркеров по национальным проектам -->
     <template v-for="(markersGroup, npName) in groupedMarkers" :key="npName">
+      <!-- Отображаем кластеры при зуме меньше 17 -->
       <YandexMapClusterer
         v-if="shouldShowClusters"
         :grid-size="64"
@@ -164,6 +165,30 @@
           ></div>
         </template>
       </YandexMapClusterer>
+
+      <!-- Отображаем маркеры напрямую при зуме 17 и выше -->
+      <template v-else>
+        <YandexMapMarker
+          v-for="(marker, index) in markersGroup"
+          :key="`${npName}-${index}`"
+          :settings="{
+            coordinates: marker.coordinates || [48.401219, 54.332098],
+            onClick: () => togglePopup(markers.indexOf(marker)),
+            zIndex: openMarker === markers.indexOf(marker) ? 1 : 0,
+          }"
+        >
+          <el-popover placement="top" :width="400" trigger="click" :title="marker.np_name">
+            <template #reference>
+              <div class="pin" v-html="generateMarkerSvg(marker)"></div>
+            </template>
+            <template #default>
+              <div class="marker-popup">
+                <p>{{ marker.name }}</p>
+              </div>
+            </template>
+          </el-popover>
+        </YandexMapMarker>
+      </template>
     </template>
   </YandexMap>
 </template>
@@ -540,21 +565,35 @@ const generateMarkerSvg = (marker: Marker): string => {
 // Генерация SVG для кластера
 const generateClusterSvg = (count: number, color: string = '#888888'): string => {
   const strokeWidth = '1'
+  const textColor = 'white'
+  const textOutline = 'rgba(0, 0, 0, 0.7)'
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="41" viewBox="0 0 33 26"
-    fill="${color}"
-    stroke="${color}" stroke-width="${strokeWidth}">
-      <g>
-        <path d="M11.9107 3.29968L4.28382 19.7018C4.20024 19.8696 4.36741 20.0584 4.55547 19.9954L28.46 11.27C28.5436 11.249 28.6063 11.1651 28.6063 11.0812V3.38357C28.6063 3.25773 28.5018 3.17383 28.3973 3.17383H12.0988C12.0152 3.17383 11.9525 3.21578 11.9107 3.29968Z"
-        fill="${color}" />
-      </g>
-
-    </svg>
-    <div class="cluster-count">${count}</div>
+    <div style="position: relative; width: 48px; height: 41px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="41" viewBox="0 0 33 26"
+      fill="${color}"
+      stroke="${color}" stroke-width="${strokeWidth}">
+        <g>
+          <path d="M11.9107 3.29968L4.28382 19.7018C4.20024 19.8696 4.36741 20.0584 4.55547 19.9954L28.46 11.27C28.5436 11.249 28.6063 11.1651 28.6063 11.0812V3.38357C28.6063 3.25773 28.5018 3.17383 28.3973 3.17383H12.0988C12.0152 3.17383 11.9525 3.21578 11.9107 3.29968Z"
+          fill="${color}" />
+        </g>
+      </svg>
+      <div style="
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: ${textColor};
+        font-weight: bold;
+        font-size: 14px;
+        text-shadow: 1px 1px 2px ${textOutline};
+        min-width: 20px;
+        text-align: center;
+        pointer-events: none;
+      ">
+        ${count}
+      </div>
+    </div>
   `
-  // <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="white" font-size="10" font-family="Arial, sans-serif" font-weight="bold">
-  //       ${count}
-  //     </text>
 }
 
 // Геодекодирование и фильтрация маркеров вне Ульяновской области
@@ -660,20 +699,5 @@ onBeforeUnmount(() => {
   width: 50px;
   height: 50px;
   cursor: pointer;
-}
-
-.cluster-count {
-  position: absolute;
-  top: 37%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-weight: bold;
-  font-size: 14px;
-  pointer-events: none; /* Чтобы клик проходил через текст на SVG */
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Контур для лучшей читаемости */
-  min-width: 20px;
-  text-align: center;
-  padding: 2px;
 }
 </style>
