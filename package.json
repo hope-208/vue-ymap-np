@@ -16,7 +16,8 @@
     "format": "prettier --write src/",
     "preview": "vite preview --open",
     "buildpreview": "vite build && vite preview --open",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "element-plus": "^2.11.4",
