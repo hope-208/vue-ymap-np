@@ -20,5 +20,18 @@ export default defineConfig({
   server: {
     open: true,
     port: 5353,
+    proxy: {
+      '/ygeocoder': {
+        target: 'https://geocode-maps.yandex.ru/1.x/',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/ygeocoder/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            proxyReq.setHeader('Origin', 'https://geocode-maps.yandex.ru/1.x/')
+          })
+        },
+      },
+    },
   },
 })

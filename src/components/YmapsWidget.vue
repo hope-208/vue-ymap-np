@@ -1,5 +1,9 @@
 <template>
+  <div v-if="!isApiKeyAvailable" class="map-loading">
+    <p>Загрузка карты...</p>
+  </div>
   <YandexMap
+    v-else
     v-model="map"
     :settings="{
       location: {
@@ -213,6 +217,33 @@ import {
   YandexMapMarker,
   //YandexMapFeature,
 } from 'vue-yandex-maps'
+
+// Функция для получения API-ключа из переменных окружения или глобальной переменной
+const getApiKey = (): string => {
+  // @ts-expect-error: window.VITE_YANDEX_API_KEY инжектируется через HTML
+  return import.meta.env?.VITE_YANDEX_API_KEY || window.VITE_YANDEX_API_KEY || ''
+}
+
+// Проверяем, доступен ли API ключ
+const apiKey = getApiKey()
+const isApiKeyAvailable = ref(!!apiKey)
+
+// Если API ключ не доступен сразу, пытаемся получить его позже
+if (!isApiKeyAvailable.value) {
+  onMounted(() => {
+    // Проверяем доступность API ключа с задержкой
+    const checkApiKey = () => {
+      const key = getApiKey()
+      if (key) {
+        isApiKeyAvailable.value = true
+      } else {
+        // Повторяем проверку через 100ms
+        setTimeout(checkApiKey, 100)
+      }
+    }
+    checkApiKey()
+  })
+}
 
 const isFullscreen = ref(false)
 const map = ref<YMap>()
@@ -600,14 +631,6 @@ const generateClusterSvg = (count: number, color: string = '#888888'): string =>
 const successfulMarkers = ref<Marker[]>([])
 const failedMarkers = ref<Marker[]>([])
 
-// Функция для получения API-ключа из переменных окружения
-const getApiKey = (): string => {
-  // @ts-expect-error: window.VITE_YANDEX_API_KEY инжектируется через HTML
-  return window.VITE_YANDEX_API_KEY || import.meta.env?.VITE_YANDEX_API_KEY
-}
-
-const apiKey = getApiKey()
-
 const isWithinUlyanovskRegion = (lat: number, lon: number): boolean => {
   const minLat = 54.0431
   const maxLat = 54.6793
@@ -618,8 +641,13 @@ const isWithinUlyanovskRegion = (lat: number, lon: number): boolean => {
 }
 
 const getCoordinates = async (address: string): Promise<[number, number] | null> => {
-  const urlGeo = 'https://geocode-maps.yandex.ru/1.x/'
-  const url = `${urlGeo}?geocode=${address.replace(/ /g, '+')}&apikey=${apiKey}&format=json`
+  // Проверяем, доступен ли API ключ
+  if (!apiKey) {
+    console.error('API ключ недоступен')
+    return null
+  }
+
+  const url = `/ygeocoder?geocode=${address.replace(/ /g, '+')}&apikey=${apiKey}&format=json`
 
   try {
     const response = await fetch(url)
@@ -646,6 +674,11 @@ const handleFullscreenChange = async () => {
 }
 
 onMounted(async () => {
+  // Проверяем, доступен ли API ключ перед началом работы
+  if (!apiKey) {
+    console.error('API ключ недоступен. Некоторые функции могут работать некорректно.')
+  }
+
   // Обработка геодекодирования
   for (const marker of markerList) {
     if (!marker.coordinates && marker.address) {
