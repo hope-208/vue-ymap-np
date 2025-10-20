@@ -7,12 +7,18 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vite.dev/config/
 export default defineConfig({
-  //base: process.env.NODE_ENV === 'production' ? '/vue-ymap-np/' : '/',
+  base: process.env.NODE_ENV === 'production' ? '/vue-ymap-np/' : '/',
   plugins: [vue(), vueDevTools(), mkcert()],
   resolve: {
-    https: true,
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
+    alias: [
+      {
+        find: '@',
+        replacement: fileURLToPath(new URL('./src', import.meta.url)),
+      },
+    ],
+  },
+  server: {
+    open: true,
+    port: 5353,
   },
 })
