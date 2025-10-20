@@ -602,7 +602,6 @@ const failedMarkers = ref<Marker[]>([])
 
 // Функция для получения API-ключа из переменных окружения
 const getApiKey = (): string => {
-  // @ts-expect-error: игнорируем ошибки типов для import.meta.env
   return import.meta.env?.VITE_YANDEX_API_KEY
 }
 
