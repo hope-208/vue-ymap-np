@@ -220,8 +220,8 @@ import {
 
 // Функция для получения API-ключа из переменных окружения или глобальной переменной
 const getApiKey = (): string => {
-  // @ts-expect-error: window.VITE_YANDEX_API_KEY инжектируется через HTML
-  return import.meta.env?.VITE_YANDEX_API_KEY || window.VITE_YANDEX_API_KEY || ''
+  // @ts-expect-error: window.YANDEX_API_KEY инжектируется через HTML
+  return import.meta.env?.YANDEX_API_KEY || window.YANDEX_API_KEY || ''
 }
 
 // Проверяем, доступен ли API ключ
