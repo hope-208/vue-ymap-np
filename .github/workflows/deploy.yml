@@ -1,4 +1,7 @@
-name: Deploy to GitHub Pages
+env:
+  YANDEX_API_KEY: ${{ secrets.YANDEX_API_KEY }}
+
+  name: Deploy to GitHub Pages
 
 on:
   push:
@@ -28,22 +31,9 @@ jobs:
 
       - name: Build Project
         run: npm run build
-        env:
-          VITE_YANDEX_API_KEY: ${{ secrets.VITE_YANDEX_API_KEY }}
 
-      - name: Check if API Key exists
-        run: |
-          if [ -z "${{ secrets.VITE_YANDEX_API_KEY }}" ]; then
-            echo "VITE_YANDEX_API_KEY secret is not set"
-            exit 1
-          fi
-
-      - name: Inject VITE_YANDEX_API_KEY
-        run: |
-          # Экранируем специальные символы в API ключе
-          ESCAPED_API_KEY=$(echo "${{ secrets.VITE_YANDEX_API_KEY }}" | sed 's/[&/\]/\\&/g')
-          # Заменяем комментарий на script тег с API ключом
-          sed -i "s|<!-- VITE_YANDEX_API_KEY -->|<script>window.VITE_YANDEX_API_KEY=\"$ESCAPED_API_KEY\"</script>|" dist/index.html
+      - name: Inject Yandex Geo
+        run: sed -i 's|<!-- YANDEX_GEO -->|<script>window.YANDEX_API_KEY="${{ secrets.YANDEX_API_KEY }}"</script>|' dist/index.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
