@@ -1,4 +1,8 @@
-name: Deploy to GitHub Pages
+env:
+  VITE_YANDEX_GEO_API_KEY: ${{ secrets.VITE_YANDEX_GEO_API_KEY }}
+  VITE_YANDEX_YMAP_API_KEY: ${{ secrets.VITE_YANDEX_YMAP_API_KEY }}
+
+  name: Deploy to GitHub Pages
 
 on:
   push:
@@ -9,9 +13,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-
-env:
-  VITE_YANDEX_API_KEY: ${{ secrets.VITE_YANDEX_API_KEY }}
 
 jobs:
   deploy:
@@ -32,12 +33,11 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      - name: Inject VITE_YANDEX_API_KEY
-        run: |
-          # Экранируем специальные символы в API ключе
-          ESCAPED_API_KEY=$(echo "${{ secrets.VITE_YANDEX_API_KEY }}" | sed 's/[&/\]/\\&/g')
-          # Заменяем комментарий на script тег с API ключом
-          sed -i "s|<!-- VITE_YANDEX_API_KEY -->|<script>window.VITE_YANDEX_API_KEY=\"$ESCAPED_API_KEY\"</script>|" dist/index.html
+      - name: Inject Yandex Geo
+        run: sed -i 's|<!-- YANDEX_GEO -->|<script>window.VITE_YANDEX_GEO_API_KEY="${{ secrets.VITE_YANDEX_GEO_API_KEY }}"</script>|' dist/index.html
+
+      - name: Inject Yandex Map
+        run: sed -i 's|<!-- YANDEX_GEO -->|<script>window.VITE_YANDEX_YMAP_API_KEY="${{ secrets.VITE_YANDEX_YMAP_API_KEY }}"</script>|' dist/index.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
