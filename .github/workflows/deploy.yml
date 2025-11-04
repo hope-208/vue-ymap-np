@@ -23,6 +23,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Inject Yandex Geo
+        run: sed -i 's|<!-- YANDEX_GEO -->|<script>window.VITE_YANDEX_GEO_API_KEY="${{ secrets.VITE_YANDEX_GEO_API_KEY }}"</script>|' dist/index.html
+
+      - name: Inject Yandex Map
+        run: sed -i 's|<!-- YANDEX_YMAP -->|<script>window.VITE_YANDEX_YMAP_API_KEY="${{ secrets.VITE_YANDEX_YMAP_API_KEY }}"</script>|' dist/index.html
+
       - name: Install Dependencies
         run: npm install
 
@@ -31,12 +37,6 @@ jobs:
         env:
           VITE_YANDEX_GEO_API_KEY: ${{ secrets.VITE_YANDEX_GEO_API_KEY }}
           VITE_YANDEX_YMAP_API_KEY: ${{ secrets.VITE_YANDEX_YMAP_API_KEY }}
-
-      - name: Inject Yandex Geo
-        run: sed -i 's|<!-- YANDEX_GEO -->|<script>window.VITE_YANDEX_GEO_API_KEY="${{ secrets.VITE_YANDEX_GEO_API_KEY }}"</script>|' dist/index.html
-
-      - name: Inject Yandex Map
-        run: sed -i 's|<!-- YANDEX_GEO -->|<script>window.VITE_YANDEX_YMAP_API_KEY="${{ secrets.VITE_YANDEX_YMAP_API_KEY }}"</script>|' dist/index.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
