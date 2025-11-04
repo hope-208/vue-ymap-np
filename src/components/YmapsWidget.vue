@@ -255,8 +255,8 @@ import {
 
 // Функция для получения API-ключа из переменных окружения или глобальной переменной
 const getApiKey = (): string => {
-  // @ts-expect-error: window.YANDEX_API_KEY инжектируется через HTML
-  return import.meta.env?.YANDEX_API_KEY || window.YANDEX_API_KEY || ''
+  // @ts-expect-error: window.VITE_YANDEX_GEO_API_KEY инжектируется через HTML
+  return import.meta.env?.VITE_YANDEX_GEO_API_KEY || window.VITE_YANDEX_GEO_API_KEY || ''
 }
 
 // Проверяем, доступен ли API ключ
@@ -294,10 +294,6 @@ const duplicateMarkers = ref<Marker[]>([])
 // const roadPoints = ref<[number, number][]>([])
 // const isRouteLoading = ref(false)
 
-const getApiKey = (): string => {
-  // @ts-expect-error: window.VITE_YANDEX_GEO_API_KEY инжектируется через HTML
-  return import.meta.env?.VITE_YANDEX_GEO_API_KEY || window.VITE_YANDEX_GEO_API_KEY
-}
 // Реактивные фильтры
 const selectedYear = ref<number[]>([])
 const selectedNpName = ref<string[]>([])
@@ -848,7 +844,6 @@ const generateClusterSvg = (count: number, color: string = '#888888'): string =>
 // Геодекодирование и фильтрация маркеров вне Ульяновской области
 const successfulMarkers = ref<Marker[]>([])
 const failedMarkers = ref<Marker[]>([])
-const apiKey = getApiKey()
 
 const isWithinUlyanovskRegion = (lat: number, lon: number): boolean => {
   const minLat = 54.0431

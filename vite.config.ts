@@ -18,4 +18,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  define: {
+    'import.meta.env.VITE_YANDEX_GEO_API_KEY': JSON.stringify(process.env.VITE_YANDEX_GEO_API_KEY),
+    'import.meta.env.VITE_YANDEX_YMAP_API_KEY': JSON.stringify(
+      process.env.VITE_YANDEX_YMAP_API_KEY,
+    ),
+  },
 })
