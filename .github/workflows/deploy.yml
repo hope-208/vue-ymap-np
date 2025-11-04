@@ -1,8 +1,4 @@
-env:
-  VITE_YANDEX_GEO_API_KEY: ${{ secrets.VITE_YANDEX_GEO_API_KEY }}
-  VITE_YANDEX_YMAP_API_KEY: ${{ secrets.VITE_YANDEX_YMAP_API_KEY }}
-
-  name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -32,6 +28,9 @@ jobs:
 
       - name: Build Project
         run: npm run build
+        env:
+          VITE_YANDEX_GEO_API_KEY: ${{ secrets.VITE_YANDEX_GEO_API_KEY }}
+          VITE_YANDEX_YMAP_API_KEY: ${{ secrets.VITE_YANDEX_YMAP_API_KEY }}
 
       - name: Inject Yandex Geo
         run: sed -i 's|<!-- YANDEX_GEO -->|<script>window.VITE_YANDEX_GEO_API_KEY="${{ secrets.VITE_YANDEX_GEO_API_KEY }}"</script>|' dist/index.html

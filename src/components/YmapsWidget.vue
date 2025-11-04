@@ -254,10 +254,7 @@ import {
 } from 'vue-yandex-maps'
 
 // Функция для получения API-ключа из переменных окружения или глобальной переменной
-const getApiKey = (): string => {
-  // @ts-expect-error: window.VITE_YANDEX_GEO_API_KEY инжектируется через HTML
-  return import.meta.env?.VITE_YANDEX_GEO_API_KEY || window.VITE_YANDEX_GEO_API_KEY || ''
-}
+import { getApiKey } from '../utils/apiKey'
 
 // Проверяем, доступен ли API ключ
 const apiKey = getApiKey()
