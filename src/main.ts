@@ -8,11 +8,16 @@ import { createYmaps } from 'vue-yandex-maps'
 
 const app = createApp(App)
 
+// Функция для получения API ключа из переменных окружения или глобальной переменной
+const getApiKey = (): string => {
+  // @ts-expect-error: window.VITE_YANDEX_YMAP_API_KEY инжектируется через HTML
+  return import.meta.env?.VITE_YANDEX_YMAP_API_KEY || window.VITE_YANDEX_YMAP_API_KEY
+}
+
 app.use(ElementPlus)
 app.use(
   createYmaps({
-    apikey: 'f5d0afd4-53ae-4593-83c8-9a1ec3485f59',
-    // apikey: 'f5d0afd4-53ae-4593-83c8-9a1ec3485f59',
+    apikey: getApiKey(),
     lang: 'ru_RU',
   }),
 )
