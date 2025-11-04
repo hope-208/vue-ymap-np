@@ -557,11 +557,11 @@ export const markerList: Marker[] = [
     np_name: 'Молодёжь и дети',
     name: 'Закупка оборудования для МБОУ «Гимназия № 79». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, г. Ульяновск, ул. Карбышева, д. 26',
+    address: 'Ульяновская область, г. Ульяновск, ул. Карбышева, д. 2',
     year: 2025,
     is_ready: false,
     iconColor: '#8265CB',
-    coordinates: [48.590538, 54.386058],
+    coordinates: [48.598911, 54.378539],
   },
   {
     idx: 51,
@@ -777,11 +777,11 @@ export const markerList: Marker[] = [
     np_name: 'Молодёжь и дети',
     name: 'Капитальный ремонт и закупка оборудования для МБОУ «Мариинская гимназия». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, г. Ульяновск, ул. Александра Матросова, \r\nд. 11',
+    address: 'Ульяновская область, г. Ульяновск, ул. Льва Толстого, 97',
     year: 2025,
     is_ready: false,
     iconColor: '#8265CB',
-    coordinates: [48.392783, 54.311172],
+    coordinates: [48.39476, 54.312627],
   },
   {
     idx: 71,
@@ -841,7 +841,7 @@ export const markerList: Marker[] = [
   {
     idx: 76,
     np_name: 'Инфраструктура для жизни',
-    name: 'Текущий ремонт дорожных объектовАвтомобильная дорога. 2025 год (план)',
+    name: 'Текущий ремонт автомобильной дороги. 2025 год (план)',
     type: null,
     address:
       'Ульяновская область, по пр-ту Генерала Тюленева (от пр-та Авиастроителей до пр-та Ленинского Комсомола) в Заволжском районе города Ульяновска.',
@@ -853,7 +853,7 @@ export const markerList: Marker[] = [
   {
     idx: 77,
     np_name: 'Инфраструктура для жизни',
-    name: 'Текущий ремонт дорожных объектовАвтомобильная дорога. 2025 год (план)',
+    name: 'Текущий ремонт автомобильной дороги. 2025 год (план)',
     type: null,
     address:
       'Ульяновская область, Московское шоссе (от ул. Промышленной до ост. «ЖБИ-1») в Засвияжском районе \r\nг. Ульяновска',
@@ -865,7 +865,7 @@ export const markerList: Marker[] = [
   {
     idx: 78,
     np_name: 'Инфраструктура для жизни',
-    name: 'Текущий ремонт дорожных объектовАвтомобильная дорога. 2025 год (план)',
+    name: 'Текущий ремонт автомобильной дороги. 2025 год (план)',
     type: null,
     address:
       'Ульяновская область, по ул. Рябикова (от ул. Доватора до ул. Богдана Хмельницкого) четная сторона в Засвияжском районе \r\nг. Ульяновск',
@@ -877,7 +877,7 @@ export const markerList: Marker[] = [
   {
     idx: 79,
     np_name: 'Инфраструктура для жизни',
-    name: 'Текущий ремонт дорожных объектовАвтомобильная дорога. 2025 год (план)',
+    name: 'Текущий ремонт автомобильной дороги. 2025 год (план)',
     type: null,
     address:
       'Ульяновская область, по улице Ленина (от ул. 12 Сентября до ул. Набережная реки Свияга) в Ленинском районе города Ульяновска',
@@ -889,7 +889,7 @@ export const markerList: Marker[] = [
   {
     idx: 80,
     np_name: 'Инфраструктура для жизни',
-    name: 'Текущий ремонт дорожных объектовАвтомобильная дорога. 2025 год (план)',
+    name: 'Текущий ремонт автомобильной дороги. 2025 год (план)',
     type: null,
     address:
       'Ульяновская область, пр-кт Авиастроителей (от пр-та Туполева до пр-та Генерала Тюленева) \r\nв Заволжском районе г. Ульяновска',
@@ -929,7 +929,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [48.407722, 54.326249],
+    coordinates: [48.406947, 54.327728],
   },
   {
     idx: 84,
@@ -951,7 +951,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#00B0D0',
-    coordinates: [48.33618, 54.26487],
+    coordinates: [48.336751, 54.264847],
   },
   {
     idx: 86,
@@ -1006,7 +1006,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#00B0D0',
-    coordinates: [48.59821, 54.386326],
+    coordinates: [48.597881, 54.386148],
   },
   {
     idx: 91,
@@ -1141,7 +1141,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.536038, 54.36123],
+    coordinates: [48.535279, 54.360637],
   },
   {
     idx: 103,
@@ -1152,7 +1152,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.388184, 54.32867],
+    coordinates: [48.388611, 54.328627],
   },
   {
     idx: 104,
@@ -1174,7 +1174,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.569365, 54.378948],
+    coordinates: [48.56912, 54.378842],
   },
   {
     idx: 106,
@@ -1196,7 +1196,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.536038, 54.36123],
+    coordinates: [48.536028, 54.361242],
   },
   {
     idx: 108,
@@ -1229,7 +1229,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.536038, 54.36123],
+    coordinates: [48.535647, 54.361499],
   },
   {
     idx: 111,
@@ -1284,7 +1284,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.592919, 54.37684],
+    coordinates: [48.59266, 54.376688],
   },
   {
     idx: 116,
@@ -1306,7 +1306,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.33618, 54.26487],
+    coordinates: [48.336103, 54.264954],
   },
   {
     idx: 118,
@@ -1328,7 +1328,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.388184, 54.32867],
+    coordinates: [48.388653, 54.328343],
   },
   {
     idx: 120,
@@ -1350,7 +1350,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.602765, 54.371947],
+    coordinates: [48.60216, 54.37201],
   },
   {
     idx: 122,
@@ -1361,7 +1361,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.569365, 54.378948],
+    coordinates: [48.569593, 54.379036],
   },
   {
     idx: 123,
@@ -1372,7 +1372,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.389882, 54.328943],
+    coordinates: [48.389616, 54.328677],
   },
   {
     idx: 124,
@@ -1383,7 +1383,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.536038, 54.36123],
+    coordinates: [48.536541, 54.361533],
   },
   {
     idx: 125,
@@ -1394,7 +1394,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.315915, 54.303287],
+    coordinates: [48.305111, 54.28723],
   },
   {
     idx: 126,
@@ -1669,7 +1669,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.377189, 54.148622],
+    coordinates: [48.376832, 54.148386],
   },
   {
     idx: 151,
@@ -1960,7 +1960,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.094978, 53.671433],
+    coordinates: [47.093932, 53.672262],
   },
   {
     idx: 177,
@@ -1971,7 +1971,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.094978, 53.671433],
+    coordinates: [47.094433, 53.67174],
   },
   {
     idx: 178,
@@ -2103,7 +2103,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.105012, 54.054204],
+    coordinates: [47.104581, 54.054128],
   },
   {
     idx: 190,
@@ -2260,7 +2260,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#00B0D0',
-    coordinates: [46.354497, 53.842374],
+    coordinates: [46.354522, 53.842168],
   },
   {
     idx: 204,
@@ -2315,7 +2315,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [46.354497, 53.842374],
+    coordinates: [46.354129, 53.842309],
   },
   {
     idx: 209,
@@ -2326,7 +2326,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [46.354497, 53.842374],
+    coordinates: [46.354472, 53.842406],
   },
   {
     idx: 210,
@@ -2559,7 +2559,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.684911, 53.538125],
+    coordinates: [47.684907, 53.538292],
   },
   {
     idx: 231,
@@ -2680,7 +2680,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [46.982249, 54.192627],
+    coordinates: [46.984177, 54.194695],
   },
   {
     idx: 242,
@@ -2724,7 +2724,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#00B0D0',
-    coordinates: [46.969259, 54.195656],
+    coordinates: [46.9698, 54.195546],
   },
   {
     idx: 246,
@@ -2757,7 +2757,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [46.969259, 54.195656],
+    coordinates: [46.969021, 54.195719],
   },
   {
     idx: 249,
@@ -2948,7 +2948,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.628164, 54.108957],
+    coordinates: [47.627461, 54.108606],
   },
   {
     idx: 266,
@@ -2959,7 +2959,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.628164, 54.108957],
+    coordinates: [47.627744, 54.108259],
   },
   {
     idx: 267,
@@ -3238,7 +3238,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [49.405948, 53.987335],
+    coordinates: [49.405468, 53.987375],
   },
   {
     idx: 292,
@@ -3260,7 +3260,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [49.653964, 54.386981],
+    coordinates: [49.653545, 54.387],
   },
   {
     idx: 294,
@@ -3415,7 +3415,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#00B0D0',
-    coordinates: [47.211607, 53.136609],
+    coordinates: [47.211385, 53.136606],
   },
   {
     idx: 308,
@@ -3448,7 +3448,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.211607, 53.136609],
+    coordinates: [47.211804, 53.136681],
   },
   {
     idx: 311,
@@ -3459,7 +3459,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.211607, 53.136609],
+    coordinates: [47.211697, 53.136666],
   },
   {
     idx: 312,
@@ -3659,7 +3659,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#757F54',
-    coordinates: [47.62405, 53.289039],
+    coordinates: [47.623736, 53.288996],
   },
   {
     idx: 330,
@@ -3688,7 +3688,7 @@ export const markerList: Marker[] = [
     np_name: 'Семья',
     name: 'Текущий ремонт и закупка оборудования для ГУЗ «Новоспасская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, пгт Новоспасское Новоспасского района Ульяновской области ',
+    address: 'Ульяновская область, р.п. Новоспасское, пл. Семашко, д. 10',
     year: 2025,
     is_ready: false,
     iconColor: '#00B0D0',
@@ -3699,11 +3699,11 @@ export const markerList: Marker[] = [
     np_name: 'Продолжительная и активная жизнь',
     name: 'Закупка оборудования для ГУЗ «Новоспасская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, р.п. Новоспасское, пл. Семашко, д. 10.',
+    address: 'Ульяновская область, р.п. Новоспасское, пл. Семашко, д. 10',
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.729467, 53.143966],
+    coordinates: [47.728957, 53.143866],
   },
   {
     idx: 334,
@@ -3792,7 +3792,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.153261, 52.692694],
+    coordinates: [47.152325, 52.692811],
   },
   {
     idx: 342,
@@ -3858,7 +3858,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.863047, 52.853637],
+    coordinates: [47.862349, 52.853767],
   },
   {
     idx: 348,
@@ -3970,14 +3970,14 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [47.967736, 53.940859],
+    coordinates: [48.34004, 53.984716],
   },
   {
     idx: 358,
     np_name: 'Продолжительная и активная жизнь',
     name: 'Капитальный ремонт здания ГУЗ «Сенгилеевская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, г. Сенгилей ул. Нижневыборная д.8.',
+    address: 'Ульяновская область, г. Сенгилей ул. Нижневыборная д.8',
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
@@ -3988,22 +3988,22 @@ export const markerList: Marker[] = [
     np_name: 'Продолжительная и активная жизнь',
     name: 'Закупка транспортных средств для ГУЗ «Сенгилеевская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, г.Сенгилей, ул.Нижневыборная, д. 8.',
+    address: 'Ульяновская область, г.Сенгилей, ул.Нижневыборная, д. 8',
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.794609, 53.967298],
+    coordinates: [48.794067, 53.967052],
   },
   {
     idx: 360,
     np_name: 'Продолжительная и активная жизнь',
     name: 'Закупка оборудования для ГУЗ «Сенгилеевская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, г.Сенгилей, ул.Нижневыборная, д. 8.',
+    address: 'Ульяновская область, г.Сенгилей, ул.Нижневыборная, д. 8',
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.794609, 53.967298],
+    coordinates: [48.794949, 53.967434],
   },
   {
     idx: 361,
@@ -4104,7 +4104,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.625766, 52.721945],
+    coordinates: [47.625302, 52.721915],
   },
   {
     idx: 370,
@@ -4257,7 +4257,7 @@ export const markerList: Marker[] = [
     np_name: 'Продолжительная и активная жизнь',
     name: 'Капитальный ремонт здания ГУЗ «Старомайнская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, р.п. Старая Майна, ул. Сидорова, д.1.',
+    address: 'Ульяновская область, р.п. Старая Майна, ул. Сидорова, д.1',
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
@@ -4268,22 +4268,22 @@ export const markerList: Marker[] = [
     np_name: 'Продолжительная и активная жизнь',
     name: 'Закупка транспортных средств для ГУЗ «Старомайнская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, р.п. Старая Майна, ул. Сидорова, д.1.',
+    address: 'Ульяновская область, р.п. Старая Майна, ул. Сидорова, д.1',
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.946083, 54.605182],
+    coordinates: [48.945733, 54.604881],
   },
   {
     idx: 385,
     np_name: 'Продолжительная и активная жизнь',
     name: 'Закупка оборудования для ГУЗ «Старомайнская районная больница». 2025 год (план)',
     type: null,
-    address: 'Ульяновская область, р.п. Старая Майна, ул. Сидорова, д.1.',
+    address: 'Ульяновская область, р.п. Старая Майна, ул. Сидорова, д.1',
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.946083, 54.605182],
+    coordinates: [48.946001, 54.605529],
   },
   {
     idx: 386,
@@ -4360,7 +4360,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [49.596059, 54.387364],
+    coordinates: [46.563032, 54.564721],
   },
   {
     idx: 393,
@@ -4549,7 +4549,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [49.596059, 54.387364],
+    coordinates: [47.747118, 53.745979],
   },
   {
     idx: 410,
@@ -4593,7 +4593,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#8265CB',
-    coordinates: [48.022561, 54.159358],
+    coordinates: [48.024785, 54.162742],
   },
   {
     idx: 414,
@@ -4738,7 +4738,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.247346, 54.425818],
+    coordinates: [48.246984, 54.425442],
   },
   {
     idx: 427,
@@ -4749,7 +4749,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.247346, 54.425818],
+    coordinates: [48.246296, 54.425491],
   },
   {
     idx: 428,
@@ -4926,7 +4926,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [48.403132, 54.314192],
+    coordinates: [47.675547, 54.613719],
   },
   {
     idx: 444,
@@ -4950,7 +4950,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [47.967736, 53.940859],
+    coordinates: [47.652716, 54.54379],
   },
   {
     idx: 446,
@@ -4962,7 +4962,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [48.403132, 54.314192],
+    coordinates: [48.059805, 54.507296],
   },
   {
     idx: 447,
@@ -5018,7 +5018,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.97398, 54.507427],
+    coordinates: [47.974402, 54.507483],
   },
   {
     idx: 452,
@@ -5029,7 +5029,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [47.97398, 54.507427],
+    coordinates: [47.973586, 54.507434],
   },
   {
     idx: 453,
@@ -5095,7 +5095,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#8265CB',
-    coordinates: [49.073293, 54.387007],
+    coordinates: [49.073472, 54.386705],
   },
   {
     idx: 459,
@@ -5195,7 +5195,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#45B97C',
-    coordinates: [47.967736, 53.940859],
+    coordinates: [49.088766, 54.289272],
   },
   {
     idx: 468,
@@ -5239,7 +5239,7 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.832149, 54.373426],
+    coordinates: [48.83197, 54.373348],
   },
   {
     idx: 472,
@@ -5250,6 +5250,6 @@ export const markerList: Marker[] = [
     year: 2025,
     is_ready: false,
     iconColor: '#D9124A',
-    coordinates: [48.832149, 54.373426],
+    coordinates: [48.831698, 54.373133],
   },
 ]

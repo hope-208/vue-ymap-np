@@ -11,7 +11,7 @@
         zoom: 8,
       },
       zoomRange: {
-        min: 4,
+        min: 7,
         max: 19,
       },
       showScaleInCopyrights: true,
@@ -20,6 +20,7 @@
     width="100%"
     height="100vh"
   >
+    <!-- @click="handleMapClick" -->
     <YandexMapDefaultSchemeLayer />
     <YandexMapDefaultFeaturesLayer />
 
@@ -127,6 +128,19 @@
       </YandexMapControlButton>
     </YandexMapControls>
 
+    <!-- <YandexMapControls :settings="{ position: 'top right', orientation: 'vertical' }">
+      <YandexMapControlButton :settings="{ onClick: resetRoadPoints }">
+        <div class="reset-road-button">Сбросить дорогу</div>
+      </YandexMapControlButton>
+    </YandexMapControls>
+
+    <YandexMapControls :settings="{ position: 'top right', orientation: 'vertical' }">
+      <div v-if="isRouteLoading" class="route-loading-indicator">
+        <div class="spinner"></div>
+        <span>Загрузка маршрута...</span>
+      </div>
+    </YandexMapControls> -->
+
     <!-- Кластеризаторы маркеров по национальным проектам -->
     <template v-for="(markersGroup, npName) in groupedMarkers" :key="npName">
       <!-- Отображаем кластеры при зуме меньше 17 -->
@@ -146,14 +160,27 @@
             zIndex: openMarker === markers.indexOf(marker) ? 1 : 0,
           }"
         >
-          <el-popover placement="top" :width="400" trigger="click" :title="marker.np_name">
+          <el-popover
+            placement="top"
+            :width="400"
+            trigger="click"
+            :visible="openMarker === markers.indexOf(marker) ? true : false"
+          >
             <template #reference>
               <div class="pin" v-html="generateMarkerSvg(marker)"></div>
             </template>
             <template #default>
               <div class="marker-popup">
-                <!-- <h3>{{ marker.np_name }}</h3>
-                  <p>Год(ы): {{ formatYearRange(marker.year) }}</p>
+                <el-row class="marker-header">
+                  <h3 class="marker-title">{{ marker.np_name }}</h3>
+                  <el-button
+                    class="close-popover-btn"
+                    :icon="Close"
+                    text
+                    @click="togglePopup(-1)"
+                  />
+                </el-row>
+                <!--  <p>Год(ы): {{ formatYearRange(marker.year) }}</p>
                   -->
                 <p>{{ marker.name }}</p>
               </div>
@@ -181,7 +208,14 @@
             zIndex: openMarker === markers.indexOf(marker) ? 1 : 0,
           }"
         >
-          <el-popover placement="top" :width="400" trigger="click" :title="marker.np_name">
+          <el-popover
+            placement="top"
+            :width="400"
+            trigger="click"
+            :title="marker.np_name"
+            :visible="openMarker === markers.indexOf(marker)"
+            @update:visible="handlePopoverVisibleChange($event, markers.indexOf(marker))"
+          >
             <template #reference>
               <div class="pin" v-html="generateMarkerSvg(marker)"></div>
             </template>
@@ -198,6 +232,7 @@
 </template>
 
 <script setup lang="ts">
+import { Close } from '@element-plus/icons-vue'
 import { ref, computed, onMounted, onBeforeUnmount, watchEffect, nextTick, watch } from 'vue'
 import type {
   YMap,
@@ -215,7 +250,7 @@ import {
   YandexMapGeolocationControl,
   YandexMapZoomControl,
   YandexMapMarker,
-  //YandexMapFeature,
+  // YandexMapFeature,
 } from 'vue-yandex-maps'
 
 // Функция для получения API-ключа из переменных окружения или глобальной переменной
@@ -253,7 +288,16 @@ const trueBounds = ref<LngLatBounds>([
   [0, 0],
   [0, 0],
 ])
+const duplicateMarkers = ref<Marker[]>([])
+// const roadStartPoint = ref<[number, number] | null>(null)
+// const roadEndPoint = ref<[number, number] | null>(null)
+// const roadPoints = ref<[number, number][]>([])
+// const isRouteLoading = ref(false)
 
+const getApiKey = (): string => {
+  // @ts-expect-error: window.VITE_YANDEX_GEO_API_KEY инжектируется через HTML
+  return import.meta.env?.VITE_YANDEX_GEO_API_KEY || window.VITE_YANDEX_GEO_API_KEY
+}
 // Реактивные фильтры
 const selectedYear = ref<number[]>([])
 const selectedNpName = ref<string[]>([])
@@ -540,6 +584,170 @@ const handleZoomChange = (zoom: number) => {
   currentZoom.value = zoom
 }
 
+// Функция для проверки маркеров на одинаковые координаты
+const checkDuplicateMarkers = () => {
+  const duplicates: Marker[] = []
+  const coordinateMap = new Map<string, Marker[]>()
+
+  // Группируем маркеры по координатам
+  markers.value.forEach((marker) => {
+    if (marker.coordinates) {
+      const key = `${marker.coordinates[0]},${marker.coordinates[1]}`
+      if (!coordinateMap.has(key)) {
+        coordinateMap.set(key, [])
+      }
+      coordinateMap.get(key)!.push(marker)
+    }
+  })
+
+  // Находим маркеры с одинаковыми координатами (более одного маркера на точку)
+  coordinateMap.forEach((markerGroup, coords) => {
+    if (markerGroup.length > 1) {
+      duplicates.push(...markerGroup)
+      console.warn(`Найдены маркеры с одинаковыми координатами [${coords}]:`, markerGroup)
+    }
+  })
+
+  duplicateMarkers.value = duplicates
+  if (duplicates.length > 0) {
+    console.warn(
+      `Всего найдено ${duplicates.length} маркеров с одинаковыми координатами. Проверьте данные для корректного отображения.`,
+    )
+  }
+}
+
+// Функция для установки начальной точки дороги
+// const setRoadStartPoint = async (coordinates: [number, number]) => {
+//   roadStartPoint.value = coordinates
+//   // Если уже установлена конечная точка, генерируем точки дороги
+//   if (roadEndPoint.value) {
+//     await generateRoadPoints()
+//   }
+// }
+
+// // Функция для установки конечной точки дороги
+// const setRoadEndPoint = async (coordinates: [number, number]) => {
+//   roadEndPoint.value = coordinates
+//   // Если уже установлена начальная точка, генерируем точки дороги
+//   if (roadStartPoint.value) {
+//     await generateRoadPoints()
+//   }
+// }
+
+// // Функция для генерации точек дороги между начальной и конечной точками
+// const generateRoadPoints = async () => {
+//   if (!roadStartPoint.value || !roadEndPoint.value) return
+
+//   const start = roadStartPoint.value
+//   const end = roadEndPoint.value
+
+//   // Получаем реальный маршрут через API Яндекс.Карт
+//   const routePoints = await getRouteCoordinates(start, end)
+
+//   if (routePoints && routePoints.length > 0) {
+//     // Используем реальный маршрут
+//     roadPoints.value = routePoints
+//   } else {
+//     // Если не удалось получить маршрут, используем прямую линию как запасной вариант
+//     console.warn('Не удалось получить маршрут, используем прямую линию')
+
+//     // Генерируем промежуточные точки (в данном случае 10 точек)
+//     const points: [number, number][] = [start]
+//     const steps = 10
+
+//     for (let i = 1; i <= steps; i++) {
+//       const ratio = i / steps
+//       const lat = start[0] + (end[0] - start[0]) * ratio
+//       const lng = start[1] + (end[1] - start[1]) * ratio
+//       points.push([lat, lng])
+//     }
+
+//     roadPoints.value = points
+//   }
+// }
+
+// Функция для получения координат маршрута через API Яндекс.Карт
+// const getRouteCoordinates = async (
+//   start: [number, number],
+//   end: [number, number],
+// ): Promise<[number, number][] | null> => {
+//   const apiKey = getApiKey()
+//   if (!apiKey) {
+//     console.error('API ключ не найден')
+//     return null
+//   }
+
+//   // Форматируем координаты для API (долгота, широта)
+//   const startPoint = `${start[1]},${start[0]}`
+//   const endPoint = `${end[1]},${end[0]}`
+
+//   // URL для получения маршрута
+//   const url = `https://router.api-maps.yandex.ru/v2/route?lang=ru_RU&apikey=${apiKey}&point=${startPoint}&point=${endPoint}&results=1`
+
+//   try {
+//     isRouteLoading.value = true
+//     const response = await fetch(url)
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`)
+//     }
+
+//     const data = await response.json()
+
+//     // Проверяем, есть ли маршрут в ответе
+//     if (data && data.features && data.features.length > 0) {
+//       const route = data.features[0]
+//       // Извлекаем координаты маршрута
+//       if (route.geometry && route.geometry.coordinates) {
+//         // Преобразуем координаты из [lng, lat] в [lat, lng]
+//         const coordinates: [number, number][] = route.geometry.coordinates.map(
+//           (coord: [number, number]) => [coord[1], coord[0]],
+//         )
+//         return coordinates
+//       }
+//     }
+
+//     console.warn('Маршрут не найден')
+//     return null
+//   } catch (error) {
+//     console.error('Ошибка получения маршрута:', error)
+//     return null
+//   } finally {
+//     isRouteLoading.value = false
+//   }
+// }
+// // Функция для обработки кликов на карте
+// const handleMapClick = async (event: { detail: { lngLat: { lat: number; lng: number } } }) => {
+//   // Получаем координаты клика
+//   const coordinates = event.detail.lngLat
+
+//   // Если начальная точка еще не установлена, устанавливаем ее
+//   if (!roadStartPoint.value) {
+//     await setRoadStartPoint([coordinates.lat, coordinates.lng])
+//     console.log('Установлена начальная точка дороги:', coordinates)
+//   }
+//   // Если начальная точка установлена, но конечная еще нет, устанавливаем конечную точку
+//   else if (!roadEndPoint.value) {
+//     await setRoadEndPoint([coordinates.lat, coordinates.lng])
+//     console.log('Установлена конечная точка дороги:', coordinates)
+//   }
+//   // Если обе точки установлены, сбрасываем и начинаем заново
+//   else {
+//     roadStartPoint.value = [coordinates.lat, coordinates.lng]
+//     roadEndPoint.value = null
+//     roadPoints.value = []
+//     console.log('Сброшены точки дороги. Установлена новая начальная точка:', coordinates)
+//   }
+// }
+
+// // Функция для сброса точек дороги
+// const resetRoadPoints = () => {
+//   roadStartPoint.value = null
+//   roadEndPoint.value = null
+//   roadPoints.value = []
+//   console.log('Точки дороги сброшены')
+// }
+
 // Переключение fullscreen
 const toggleFullscreen = () => {
   if (isFullscreen.value) {
@@ -551,7 +759,17 @@ const toggleFullscreen = () => {
 
 // Открытие/закрытие попапа
 const togglePopup = (index: number) => {
-  openMarker.value = openMarker.value === index ? null : index
+  console.log('Открытие/закрытие попапа', index)
+  openMarker.value = index === -1 ? null : index
+}
+
+// Обработчики событий update:visible для popover
+const handlePopoverVisibleChange = (val: boolean, index: number) => {
+  if (val) {
+    togglePopup(index)
+  } else {
+    togglePopup(-1)
+  }
 }
 
 // Генерация SVG для маркера
@@ -630,6 +848,7 @@ const generateClusterSvg = (count: number, color: string = '#888888'): string =>
 // Геодекодирование и фильтрация маркеров вне Ульяновской области
 const successfulMarkers = ref<Marker[]>([])
 const failedMarkers = ref<Marker[]>([])
+const apiKey = getApiKey()
 
 const isWithinUlyanovskRegion = (lat: number, lon: number): boolean => {
   const minLat = 54.0431
@@ -702,6 +921,9 @@ onMounted(async () => {
     // По умолчанию выбираем все значения, поэтому оставляем пустой массив
     applyFilters()
   })
+
+  // Проверка маркеров на одинаковые координаты
+  checkDuplicateMarkers()
 })
 
 onBeforeUnmount(() => {
@@ -709,7 +931,7 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style>
+<style scoped>
 .filter-container {
   max-width: 494px;
   width: fit-content;
@@ -739,5 +961,32 @@ onBeforeUnmount(() => {
   width: 50px;
   height: 50px;
   cursor: pointer;
+}
+
+.marker-header {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.marker-title {
+  max-height: min-content;
+  margin: 0;
+  margin-block: 0;
+  margin-inline: 0;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.close-popover-btn {
+  max-height: max-content;
+  max-width: max-content;
+  padding: 2px;
+  font-size: 20px;
+  box-shadow: none;
+  background: none;
+}
+
+.close-popover-btn:hover {
+  background-color: #e0e0e0;
 }
 </style>
