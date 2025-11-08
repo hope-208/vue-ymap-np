@@ -966,7 +966,6 @@ onBeforeUnmount(() => {
   margin-block: 0;
   margin-inline: 0;
   font-weight: bold;
-  font-size: 24px;
 }
 
 .close-popover-btn {
