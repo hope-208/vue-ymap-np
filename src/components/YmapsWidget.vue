@@ -7,14 +7,18 @@
     v-model="map"
     :settings="{
       location: {
-        center: [47.973672, 53.946913], // [lng, lat] - центр Ульяновской области
+        center: [47.967736, 53.940859], // [lng, lat] - центр Ульяновской области
         zoom: 8,
       },
       zoomRange: {
-        min: 7,
+        min: 8,
         max: 19,
       },
       showScaleInCopyrights: true,
+      restrictMapArea: [
+        [45.797506, 52.548958],
+        [52.548958, 54.891416],
+      ],
     }"
     @update:zoom="handleZoomChange($event)"
     width="100%"
