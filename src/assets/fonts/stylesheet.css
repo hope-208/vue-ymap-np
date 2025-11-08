@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    url(./bebas_neue/bebas_neue_regular-webfont.woff) format('woff'),
+    url(./bebas_neue/bebas_neue_regular-webfont.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: bold;
+  font-weight: 700;
+  src:
+    url(./bebas_neue/bebas_neue_bold-webfont.woff) format('woff'),
+    url(./bebas_neue/bebas_neue_bold-webfont.woff2) format('woff2');
+}

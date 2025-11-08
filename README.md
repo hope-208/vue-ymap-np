@@ -1,48 +1,72 @@
 # vue-ymap-np
 
-This template should help get you started developing with Vue 3 in Vite.
+Проект карты объектов, создаваемых в рамках национальных проектов Ульяновской области 2025-2030 гг. Vue 3 in Vite.
 
-## Recommended IDE Setup
+## Инструкции по установке:
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### Dev
 
-## Recommended Browser Setup
+// клонировать репозиторий по SSH
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+```bash
+git clone git@github.com:hope-208/vue-ymap-np.git
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
 ```
 
-### Compile and Hot-Reload for Development
+// перейти в папку проекта
 
-```sh
+```bash
+cd vue-ymap-np
+```
+
+// установить зависимости проекта
+
+```bash
+npm i
+```
+
+// запуск проекта для разработки
+
+```bash
+
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Локальная ссылка проекта: http://localhost:5173/vue-ymap-np/
 
-```sh
+// проверить код на наличие ошибок [ESLint](https://eslint.org/)
+
+```bash
+
+npm run lint
+```
+
+### Build
+
+// сборка проекта для продакшена
+
+```bash
+
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Deploy
 
-```sh
-npm run lint
+// сборка проекта и публикация на GitHub Pages
+
+```bash
+
+npm run deploy
 ```
+
+## Использованные технологии
+
+![Vue3](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Element-Plus](https://img.shields.io/badge/element-plus-%23202023.svg?style=for-the-badge&logo=elementplus&logoColor=white)
+![Element-Plus](https://img.shields.io/badge/element-plus-%23202023.svg?style=for-the-badge&logo=elementplus&logoColor=white)
+![Yandex.Maps](https://img.shields.io/badge/yandex.maps-%23010101.svg?style=for-the-badge&logo=yandex&logoColor=white)
+![Vue-Yandex-Maps](https://img.shields.io/badge/yandex.maps-%23010101.svg?style=for-the-badge&logo=yandex&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)

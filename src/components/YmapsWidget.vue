@@ -7,7 +7,7 @@
     v-model="map"
     :settings="{
       location: {
-        center: [48.401219, 54.332098], // [lng, lat] - Ульяновск
+        center: [47.973672, 53.946913], // [lng, lat] - центр Ульяновской области
         zoom: 8,
       },
       zoomRange: {
@@ -752,7 +752,6 @@ const toggleFullscreen = () => {
 
 // Открытие/закрытие попапа
 const togglePopup = (index: number) => {
-  console.log('Открытие/закрытие попапа', index)
   openMarker.value = index === -1 ? null : index
 }
 
@@ -904,8 +903,6 @@ onMounted(async () => {
     }
   }
 
-  console.log('Успешные маркеры:', successfulMarkers.value)
-
   document.addEventListener('fullscreenchange', handleFullscreenChange)
 
   nextTick(() => {
@@ -957,7 +954,9 @@ onBeforeUnmount(() => {
 
 .marker-header {
   justify-content: space-between;
+  flex-wrap: nowrap;
   gap: 10px;
+  margin-bottom: 5px;
 }
 
 .marker-title {
